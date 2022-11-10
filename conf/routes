@@ -5,3 +5,4 @@
 
 # Routings
 GET     /pass-bakery/status                 controllers.ProductController.getStatus()
+GET     /rest/bakery/products               controllers.ProductController.getInventory()
