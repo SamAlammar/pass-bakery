@@ -1,14 +1,17 @@
-import Dependencies._
-
-ThisBuild / scalaVersion     := "2.13.8"
-ThisBuild / version          := "0.1.0-SNAPSHOT"
-ThisBuild / organization     := "com.example"
-ThisBuild / organizationName := "example"
-
 lazy val root = (project in file("."))
+  .enablePlugins(PlayScala)
   .settings(
-    name := "pass-bakery",
-    libraryDependencies += scalaTest % Test
+    name := """pass-bakery""",
+    organization := "com.example",
+    version := "1.0-SNAPSHOT",
+    scalaVersion := "2.13.10",
+    libraryDependencies ++= Seq(
+      guice,
+      "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
+    ),
+    scalacOptions ++= Seq(
+      "-feature",
+      "-deprecation",
+      "-Xfatal-warnings"
+    )
   )
-
-// See https://www.scala-sbt.org/1.x/docs/Using-Sonatype.html for instructions on how to publish to Sonatype.
