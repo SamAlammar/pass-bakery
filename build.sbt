@@ -15,3 +15,6 @@ lazy val root = (project in file("."))
       "-Xfatal-warnings"
     )
   )
+libraryDependencies ++= Seq(
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "test"
+)

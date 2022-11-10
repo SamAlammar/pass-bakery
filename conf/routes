@@ -4,4 +4,4 @@
 # ~~~~
 
 # Routings
-GET     /pass-bakery/status                 controllers.ProductController.getAll()
+GET     /pass-bakery/status                 controllers.ProductController.getStatus()
