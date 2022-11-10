@@ -1,12 +1,9 @@
 repos:
--	repo: git@github.com:pre-commit/pre-commit-hooks.git
-	rev: v2.3.0 
-	hooks:
-	-	id: check-json
-	-	id: check-xml
-	-	id: check-yaml
-	-	id: end-of-file-fixer
-	-	id: trailing-whitespace
--	repo: git@github.com:coyainsurance/pre-commit-scalafmt.git
-	hooks:
-	-	id: scalafmt
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v2.3.0
+      hooks:
+          - id: check-json
+          - id: check-xml
+          - id: check-yaml
+          - id: end-of-file-fixer
+          - id: trailing-whitespace
