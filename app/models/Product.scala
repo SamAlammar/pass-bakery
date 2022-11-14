@@ -11,11 +11,6 @@ trait JsonImplicits {
 
 case class Product(service: String, environment: String, serverTime: String)
 
-/** Object Companion for serialization
- *
- */
 object Product extends JsonImplicits {
   implicit val format: OFormat[Product] = Json.format
 }
-
-case class NestedCaseProduct(value: String) extends ImplicitJsonFormat
