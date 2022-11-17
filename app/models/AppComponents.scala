@@ -8,7 +8,7 @@ import play.api.db.evolutions.EvolutionsComponents
 import play.api.routing.Router
 import play.filters.HttpFiltersComponents
 
-class AppComponents(cntx: Context)
+abstract class AppComponents(cntx: Context)
   extends BuiltInComponentsFromContext(cntx)
     with DBComponents
     with EvolutionsComponents
@@ -16,6 +16,4 @@ class AppComponents(cntx: Context)
     with HttpFiltersComponents {
   // this will actually run the database migrations on startup
   applicationEvolutions
-
-  override def router: Router = ???
 }

@@ -1,20 +1,10 @@
 package controllers
 
-import doobie.implicits._
-import cats.effect.IO
-import cats.effect.unsafe.implicits.global
-import doobie.{Fragment, Read, Transactor}
-import doobie.implicits.toSqlInterpolator
-import doobie.util.transactor.Transactor.Aux
 import models.{EndPointStatus, Product}
-import play.api.ApplicationLoader.Context
-import play.api.{BuiltInComponentsFromContext, Environment}
-import play.api.db.{DBComponents, Database, HikariCPComponents}
-import play.api.db.evolutions.EvolutionsComponents
+import play.api.Environment
 import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
-import play.api.routing.Router
-import play.filters.HttpFiltersComponents
+import services.ProductDAO
 
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -25,16 +15,8 @@ import javax.inject.Inject
  */
 class ProductController @Inject() (
                                     cc: ControllerComponents,
-                                    environment: Environment,
-                                  ) extends AbstractController(cc) {
-
-
-  val xa = Transactor.fromDriverManager[IO](
-    "org.postgresql.Driver", // driver classname
-    "jdbc:postgresql:bakery_db", // connect URL (driver-specific)
-    "postgres", // user
-    "" // password
-  )
+                                    environment: Environment
+                                  ) extends AbstractController(cc) with ProductDAO {
 
   // When the user route to <root>/pass-bakery/status then this will return a status JSON
   def getStatus: Action[AnyContent] = Action {
@@ -52,18 +34,7 @@ class ProductController @Inject() (
   // When the user route to <root>/rest/bakery/products then this will return all the elements of the bakery
   // database.
   def getInventory: Action[AnyContent] = Action {
-
-    // Select * statement with rows returned as a list so I can put it in JSON format
-    def getResults[T: Read]: List[T] = {
-        sql"select * from Bakery".query[T] // Query0[*]
-          .to[List] // ConnectionIO[List[Product]]
-          .transact(xa) // IO[List[Product]]
-          .unsafeRunSync() // List[Product]
-          .take(5) // List[Product]
-    }
-
     val results : List[Product] = getResults[Product]
-
 
     Ok(Json.toJson(results.toString()))
   }
