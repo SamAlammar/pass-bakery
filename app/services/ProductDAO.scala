@@ -20,7 +20,7 @@ trait ProductDAO {
    * @return
    */
   def getResults[T: Read]: List[T] = {
-    sql"select * from Bakery".query[T]
+    sql"select * from Product".query[T]
       .to[List]
       .transact(xa)
       .unsafeRunSync()

@@ -1,10 +1,6 @@
 package models
 
-import play.api.db.{Database, NamedDatabase}
 import play.api.libs.json.{JsMacroImpl, Json, OFormat}
-
-import javax.inject.Inject
-import scala.concurrent.Future
 import scala.language.experimental.macros
 
 trait ImplicitJsonFormat
@@ -18,5 +14,9 @@ object EndPointStatus extends JsonImplicits {
   implicit val format: OFormat[EndPointStatus] = Json.format
 }
 
-case class Product(ID: String, name: String,quantity: Option[String],price: Option[String],
-                   createdAt: Option[String],updatedAt: Option[String])
+case class Product(ID: String,
+                   name: String,
+                   quantity: Option[String],
+                   price: Option[String],
+                   createdAt: Option[String],
+                   updatedAt: Option[String])
