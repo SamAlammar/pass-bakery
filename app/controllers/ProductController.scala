@@ -18,7 +18,11 @@ class ProductController @Inject() (
                                     environment: Environment
                                   ) extends AbstractController(cc) with ProductDAO {
 
-  // When the user route to <root>/pass-bakery/status then this will return a status JSON
+  /**
+   * When the user route to <root>/pass-bakery/status then this will return a status JSON
+   *
+   * @return
+   */
   def getStatus: Action[AnyContent] = Action {
 
     // Used LocalDateTime since it time and date is formatted in ISO-8601 as it is written in its doc.
@@ -27,12 +31,14 @@ class ProductController @Inject() (
     val curEnv = environment.mode
     val status = EndPointStatus("pass-bakery", curEnv.toString, curDateTime.toString)
 
-    // Send OK signal with JSON status
     Ok(Json.toJson(status))
   }
 
-  // When the user route to <root>/rest/bakery/products then this will return all the elements of the bakery
-  // database.
+  /** When the user route to <root>/rest/bakery/products then this will return all
+   * the elements of the product database.
+   *
+   * @return
+   */
   def getInventory: Action[AnyContent] = Action {
     val results : List[Product] = getResults[Product]
 

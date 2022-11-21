@@ -8,18 +8,21 @@ import cats.effect.unsafe.implicits.global
 
 trait ProductDAO {
   val xa = Transactor.fromDriverManager[IO](
-    "org.postgresql.Driver", // driver classname
-    "jdbc:postgresql:bakery_db", // connect URL (driver-specific)
-    "postgres", // user
-    "" // password
+    "org.postgresql.Driver",
+    "jdbc:postgresql:bakery_db",
+    "postgres",
+    ""
   )
 
-  // Select * statement with rows returned as a list so I can put it in JSON format
+  /** Select * statement with rows returned as a list so I can put it in JSON format
+   *
+   * @tparam T
+   * @return
+   */
   def getResults[T: Read]: List[T] = {
-    sql"select * from Bakery".query[T] // Query0[*]
-      .to[List] // ConnectionIO[List[Product]]
-      .transact(xa) // IO[List[Product]]
-      .unsafeRunSync() // List[Product]
-      .take(5) // List[Product]
+    sql"select * from Bakery".query[T]
+      .to[List]
+      .transact(xa)
+      .unsafeRunSync()
   }
 }
