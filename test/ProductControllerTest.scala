@@ -12,7 +12,7 @@ import play.api.test.Helpers._
  */
 class ProductControllerTest extends PlaySpec with Results {
 
-  "getStatus() test" should {
+  "<root>/pass-bakery/status test" should {
     "be valid" in {
       val environment = Environment.simple()
 
@@ -23,7 +23,7 @@ class ProductControllerTest extends PlaySpec with Results {
     }
   }
 
-  "getInventory() test" should {
+  "<root>/rest/bakery/products test" should {
     "be valid" in {
       val environment = Environment.simple()
 
