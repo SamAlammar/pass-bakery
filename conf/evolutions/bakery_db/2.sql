@@ -13,5 +13,5 @@ INSERT
 
 -- !Downs
 
-DELETE FROM Product WHERE name = 'Glazed Donut'
-DELETE FROM Product WHERE name = 'English Bagel'
+DELETE FROM Product WHERE name = 'Glazed Donut';
+DELETE FROM Product WHERE name = 'English Bagel';

@@ -23,7 +23,7 @@ class ProductControllerTest extends PlaySpec with Results {
     }
   }
 
-  "<root>/rest/bakery/products test" should {
+  "GET <root>/rest/bakery/products test" should {
     "be valid" in {
       val environment = Environment.simple()
 

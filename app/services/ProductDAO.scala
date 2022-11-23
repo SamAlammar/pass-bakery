@@ -6,7 +6,7 @@ import doobie.util.transactor.Transactor
 import doobie.implicits._
 import cats.effect.unsafe.implicits.global
 import doobie.util.transactor.Transactor.Aux
-import models.Products
+import models.UserProducts
 
 import scala.util.{Failure, Success, Try}
 
@@ -21,7 +21,7 @@ trait ProductDAO {
   /** Select * statement with rows returned as a list so I can put it in JSON format
    *
    * @tparam T: What the query will put its data in the format of.
-   * @return
+   * @return A list of all products in the database.
    */
   def getResults[T: Read]: List[T] = {
 
@@ -36,7 +36,7 @@ trait ProductDAO {
    *
    * @param id: String of the UUID given by the user
    * @tparam T: What the query will put its data in the format of.
-   * @return
+   * @return Either a list of the row being selected or an empty list if it doesn't exist from the ID given
    */
   def getResultById[T: Read](id: String) : List[T] = {
     val status = Try(
@@ -46,9 +46,9 @@ trait ProductDAO {
         .transact(xa)
         .unsafeRunSync()
     )
-    status match{
+    status match {
       case Success(list) => list
-      case Failure(_) => null
+      case Failure(_) => List.empty
     }
   }
 
@@ -57,7 +57,7 @@ trait ProductDAO {
    * @param product: Given product instance to use in query.
    * @return
    */
-  def save(product: Products): Int = {
+  def save(product: UserProducts): Int = {
     sql"insert into Product (name, quantity, price) values (${product.name}, ${product.quantity}, ${product.price})"
       .update
       .run
@@ -70,9 +70,9 @@ trait ProductDAO {
    * @param id: String of the UUID given by the user.
    * @param product: Given product instance to use in query.
    * @tparam T: What the query will put its data in the format of.
-   * @return
+   * @return A number signifying either a row updated (1) or -1 if the ID doesn't exist
    */
-  def updateResultById[T](id: String, product: Products): Int = {
+  def updateResultById[T](id: String, product: UserProducts): Int = {
     val status = Try(
       sql"update Product set name = ${product.name}, quantity = ${product.quantity}, price = ${product.price} where id=$id::uuid "
       .update
@@ -91,7 +91,7 @@ trait ProductDAO {
    *
    * @param id: String of the UUID given by the user.
    * @tparam T: What the query will put its data in the format of.
-   * @return
+   * @return A number signifying either a row deleted (1) or -1 if the ID doesn't exist
    */
   def deleteResultById[T](id: String): Int = {
     val status = Try(
@@ -102,7 +102,7 @@ trait ProductDAO {
         .unsafeRunSync()
     )
 
-    status match{
+    status match {
       case Success(num) => num
       case Failure(_) => -1
     }

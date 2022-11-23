@@ -1,8 +1,9 @@
 package controllers
 
 import models.{EndPointStatus, Products}
+import models.UserProducts
 import play.api.Environment
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, Action, AnyContent, ControllerComponents}
 import services.ProductDAO
 
@@ -20,7 +21,7 @@ class ProductController @Inject() (
 
   /**
    * When the user route to <root>/pass-bakery/status then this will return a status JSON
-   * @return
+   * @return JSON of the status of current endpoint
    */
   def getStatus: Action[AnyContent] = Action {
 
@@ -35,7 +36,7 @@ class ProductController @Inject() (
 
   /** When the user route to <root>/rest/bakery/products then this will return all
    *  the elements of the product database.
-   * @return
+   * @return A list JSON containing all the products in the database.
    */
   def getInventory: Action[AnyContent] = Action {
     val results : List[Products] = getResults[Products]
@@ -47,36 +48,28 @@ class ProductController @Inject() (
    * make sure it's a valid UUID string (or an exception will get thrown) then check if it found
    * a result or not (result is empty) and return the appropriate status + body if needed.
    * @param id: String of the UUID given by the user in the URL
-   * @return
+   * @return A 200 signal with the product pulled from database or 404 saying the ID is incorrect
    */
   def getProduct(id: String): Action[AnyContent] = Action {
     val result: List[Products] = getResultById[Products](id)
 
     // I have to make sure I don't keep giving multiple statuses so this if-else will resolve it
-    if (result == null)
-      NotFound("Wrong ID string")
-    else if (result.isEmpty)
-      NotFound("ID not found")
+    if (result.isEmpty)
+      NotFound("Incorrect ID, check the ID again if it is wrong format or none existant")
     else
-      Ok(Json.toJson(result))
+      Ok(Json.toJson(result.head))
   }
 
   /** When the user POST to <root>/rest/bakery/product with a JSON request then this
    *  will insert the given JSON into the database.
-   * @return
+   *
+   * Request Body: A JSON with the new name, quantity, and price of the product being added
+   * @return A signal saying product is added
    */
-  def addProduct(): Action[JsValue] = Action(parse.json) { request =>
+  def addProduct(): Action[UserProducts] = Action(parse.json[UserProducts]) { request =>
+      save(request.body)
 
-    val productResult = request.body.validate[List[Products]]
-    productResult.fold(
-      _ => {
-        BadRequest("Something went wrong, this error shouldn't exist, debug it further to find out")
-      },
-      product => {
-        save(product.head)
-        Ok(Json.obj("message" -> "Product saved."))
-      }
-    )
+      Ok(Json.obj("message" -> "Product saved."))
   }
 
   /** When the user PUT to <root>/rest/bakery/product/:id with a JSON request
@@ -85,26 +78,18 @@ class ProductController @Inject() (
    * or not (result is zero) and return the appropriate status.
    *
    * @param id: String of the UUID given by the user in the URL
-   * @return
+   * Request Body: A JSON with the new name, quantity, and price of the product being updated
+   * @return A status signal, either 200 with product updated or 404 with incorrect ID
    */
-  def updateProduct(id: String): Action[JsValue] = Action(parse.json) { request =>
+  def updateProduct(id: String): Action[UserProducts] = Action(parse.json[UserProducts]) { request =>
+      val result = updateResultById[Products](id, request.body)
 
-    val productResult = request.body.validate[List[Products]]
-    productResult.fold(
-      _ => {
-        BadRequest("Something went wrong, this error shouldn't exist, debug it further to find out")
-      },
-      product => {
-        val result = updateResultById[Products](id, product.head)
-
-        // I have to make sure I don't keep giving multiple statuses so this if-else will resolve it
-        result match {
-          case 0 => NotFound ("ID not found")
-          case -1 => NotFound ("Wrong ID string")
-          case _ => Ok (Json.obj ("message" -> "Product updated.") )
-        }
+      // I have to make sure I don't keep giving multiple statuses so this if-else will resolve it
+      result match {
+        case 0 => NotFound ("ID not found")
+        case -1 => NotFound ("Wrong ID string")
+        case _ => Ok (Json.obj ("message" -> "Product updated.") )
       }
-    )
   }
 
   /** When the user DELETE to <root>/rest/bakery/product/:id where id is the UUID for a product,
@@ -112,7 +97,7 @@ class ProductController @Inject() (
    * a result or not (result is empty) and return the appropriate status.
    *
    * @param id: String of the UUID given by the user in the URL
-   * @return
+   * @return A 200 signal with product deleted or 404 signal due to incorrect ID given by user
    */
   def deleteProduct(id: String): Action[AnyContent] = Action {
     val result = deleteResultById[Products](id)

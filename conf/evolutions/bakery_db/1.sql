@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS Product
     CONSTRAINT "bakery-inventory_pkey" PRIMARY KEY (id)
 );
 
+-- I used language 'plpgsql' because I am using its functions now() and without it would break the program.
 CREATE OR REPLACE FUNCTION update_modified_column()
 RETURNS TRIGGER AS $$
 BEGIN
