@@ -18,10 +18,12 @@ Everytime you try committing, it will first check the quality of the code, then 
 
 If you want to compile then use ```sbt update```
 
-To run the pass bakery program, enter this command (Make sure you have your Postgres Server running before running the project):
+To run the pass bakery program, enter this command:
 ```bash
 sbt run
 ```
+**Note**: Everytime you run the program, you need to make sure that the Postgres server is up and running. To do so, Make sure
+you have Postgres.app Application running and press the ```start``` button on your PostgresSQL server. That will get the database running!
 
 To run the test for the program, enter this command:
 ```bash
