@@ -54,11 +54,11 @@ class ProductControllerTest extends PlaySpec
       status(controller.getProduct(existingId).apply(FakeRequest())) mustBe 200
     }
 
-    "none existing id test be valid" in{
+    "none existing id return HTTP 404" in{
       status(controller.getProduct(noneId).apply(FakeRequest())) mustBe 404
     }
 
-    "invalid id test be valid" in {
+    "invalid id test return HTTP 404" in {
       status(controller.getProduct(invalidId).apply(FakeRequest())) mustBe 404
     }
   }
@@ -117,11 +117,11 @@ class ProductControllerTest extends PlaySpec
       status(resultGood) mustBe 200
     }
 
-    "none existing id test be valid" in {
+    "none existing id test return HTTP 404" in {
       status(resultNoId) mustBe 404
     }
 
-    "Invalid id test be valid" in {
+    "Invalid id test return HTTP 404" in {
       status(resultInvalid) mustBe 404
     }
   }
@@ -142,11 +142,11 @@ class ProductControllerTest extends PlaySpec
       status(controller.deleteProduct(existingId).apply(FakeRequest())) mustBe 200
     }
 
-    "none existing id test be valid" in {
+    "none existing id test return HTTP 404" in {
       status(controller.deleteProduct(noneId).apply(FakeRequest())) mustBe 404
     }
 
-    "Invalid id test be valid" in {
+    "Invalid id test return HTTP 404" in {
       status(controller.deleteProduct(invalidId).apply(FakeRequest())) mustBe 404
     }
   }
