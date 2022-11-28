@@ -7,5 +7,5 @@ case class UserProducts(name: String,
                         price: Option[Double])
 
 object UserProducts {
-  implicit val format: OFormat[UserProducts] = Json.format
+  implicit val format: OFormat[UserProducts] = Json.format[UserProducts]
 }

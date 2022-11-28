@@ -53,7 +53,6 @@ class ProductController @Inject() (
   def getProduct(id: String): Action[AnyContent] = Action {
     val result: List[Products] = getResultById[Products](id)
 
-    // I have to make sure I don't keep giving multiple statuses so this if-else will resolve it
     if (result.isEmpty)
       NotFound("Incorrect ID, check the ID again if it is wrong format or none existant")
     else
@@ -67,9 +66,9 @@ class ProductController @Inject() (
    * @return A signal saying product is added
    */
   def addProduct(): Action[UserProducts] = Action(parse.json[UserProducts]) { request =>
-      save(request.body)
+    save(request.body)
 
-      Ok(Json.obj("message" -> "Product saved."))
+    Ok(Json.obj("message" -> "Product saved."))
   }
 
   /** When the user PUT to <root>/rest/bakery/product/:id with a JSON request
@@ -84,7 +83,6 @@ class ProductController @Inject() (
   def updateProduct(id: String): Action[UserProducts] = Action(parse.json[UserProducts]) { request =>
       val result = updateResultById[Products](id, request.body)
 
-      // I have to make sure I don't keep giving multiple statuses so this if-else will resolve it
       result match {
         case 0 => NotFound ("ID not found")
         case -1 => NotFound ("Wrong ID string")
@@ -102,7 +100,6 @@ class ProductController @Inject() (
   def deleteProduct(id: String): Action[AnyContent] = Action {
     val result = deleteResultById[Products](id)
 
-    // I have to make sure I don't keep giving multiple statuses so this if-else will resolve it
     result match {
       case 0 => NotFound("ID not found")
       case -1 => NotFound("Wrong ID string")

@@ -13,7 +13,7 @@ case class EndPointStatus(service: String,
                           serverTime: String)
 
 object EndPointStatus extends JsonImplicits {
-  implicit val format: OFormat[EndPointStatus] = Json.format
+  implicit val format: OFormat[EndPointStatus] = Json.format[EndPointStatus]
 }
 
 case class Products(id: String,
@@ -24,5 +24,5 @@ case class Products(id: String,
                     updatedAt: Option[String])
 
 object Products {
-  implicit val format: OFormat[Products] = Json.format
+  implicit val format: OFormat[Products] = Json.format[Products]
 }
