@@ -6,3 +6,7 @@
 # Routings
 GET     /pass-bakery/status                 controllers.ProductController.getStatus()
 GET     /rest/bakery/products               controllers.ProductController.getInventory()
+POST    /rest/bakery/product                controllers.ProductController.addProduct()
+GET     /rest/bakery/product/:id            controllers.ProductController.getProduct(id: String)
+PUT     /rest/bakery/product/:id            controllers.ProductController.updateProduct(id: String)
+DELETE  /rest/bakery/product/:id            controllers.ProductController.deleteProduct(id: String)

@@ -2,3 +2,4 @@
 .g8/
 /.idea/
 target/
+.scalafmt.conf

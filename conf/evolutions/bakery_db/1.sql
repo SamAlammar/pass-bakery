@@ -13,6 +13,37 @@ CREATE TABLE IF NOT EXISTS Product
     CONSTRAINT "bakery-inventory_pkey" PRIMARY KEY (id)
 );
 
+-- I used language 'plpgsql' because I am using its functions now() and without it would break the program.
+CREATE OR REPLACE FUNCTION update_modified_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = now();;
+    RETURN NEW;;
+END;;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_product_modtime
+    BEFORE UPDATE ON Product
+    FOR EACH ROW
+    EXECUTE PROCEDURE  update_modified_column();
+
+CREATE OR REPLACE FUNCTION update_inserted_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.created_at = now();;
+    RETURN NEW;;
+END;;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_product_creatime
+    BEFORE INSERT ON Product
+    FOR EACH ROW
+    EXECUTE PROCEDURE  update_inserted_column();
+
 -- !Downs
 
 DROP TABLE Product;
+DROP FUNCTION update_modified_column();
+DROP TRIGGER update_product_modtime;
+DROP FUNCTION update_inserted_column();
+DROP TRIGGER update_product_creatime;
